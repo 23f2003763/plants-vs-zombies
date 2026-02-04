@@ -21,6 +21,11 @@ export class ZombieAI {
             const transform = zombie.getComponent('Transform');
             const animation = zombie.getComponent('Animation');
 
+            // Ensure state exists
+            if (!zombieData.state) {
+                zombieData.state = 'walk';
+            }
+
             switch (zombieData.state) {
                 case 'walk':
                     this.handleWalkState(zombie, zombieData, transform, animation, deltaTime, elapsedTime);
@@ -30,6 +35,10 @@ export class ZombieAI {
                     break;
                 case 'die':
                     // Death is handled by combat system
+                    break;
+                default:
+                    // Unknown state, reset to walk
+                    zombieData.state = 'walk';
                     break;
             }
 
@@ -44,27 +53,37 @@ export class ZombieAI {
     handleWalkState(zombie, zombieData, transform, animation, deltaTime, elapsedTime) {
         const config = zombieData.config;
 
+        // Safety check for config
+        if (!config || typeof config.speed !== 'number') {
+            console.error('Invalid zombie config:', config);
+            return;
+        }
+
         // Check for plant collision
         const plantsInRow = this.gridSystem.getPlantsInRow(zombieData.row);
         let blockedByPlant = null;
 
         for (const { col, entity } of plantsInRow) {
+            // Make sure entity is still active
+            if (!entity || !entity.active) continue;
+
             const plantPos = this.gridSystem.gridToWorld(zombieData.row, col);
-            if (Math.abs(transform.x - plantPos.x) < 0.5 && transform.x > plantPos.x - 0.3) {
+            if (Math.abs(transform.x - plantPos.x) < 0.6 && transform.x > plantPos.x - 0.4) {
                 blockedByPlant = entity;
                 break;
             }
         }
 
-        if (blockedByPlant) {
+        if (blockedByPlant && blockedByPlant.active) {
             // Start attacking
             zombieData.state = 'attack';
             zombieData.target = blockedByPlant;
             zombieData.lastAttack = elapsedTime * 1000;
             animation.type = 'zombieAttack';
         } else {
-            // Keep walking
-            transform.x -= config.speed * deltaTime;
+            // Keep walking - speed is units per second
+            const moveAmount = config.speed * deltaTime;
+            transform.x -= moveAmount;
             animation.type = 'zombieWalk';
 
             // Check if zombie reached the house (game over condition)

@@ -93,11 +93,14 @@ export class WaveManager {
             row * GAME_CONFIG.GRID.CELL_SIZE +
             GAME_CONFIG.GRID.CELL_SIZE / 2;
 
+        // Spawn position - use consistent position for both mesh and transform
+        const spawnX = this.spawnX + Math.random() * 1.5;
+
         // Create entity
         const entity = this.world.createEntity(ENTITY_TYPES.ZOMBIE);
 
         entity.addComponent('Transform', Components.Transform(
-            this.spawnX + Math.random() * 2, // Slight variation
+            spawnX,
             0,
             rowZ
         ));
@@ -108,11 +111,10 @@ export class WaveManager {
 
         entity.addComponent('Animation', Components.Animation('zombieWalk', 1));
 
-        // Create mesh
+        // Create mesh - use SAME position as transform
         const mesh = this.modelGenerator.createZombie(type);
-        mesh.position.set(this.spawnX, 0, rowZ);
+        mesh.position.set(spawnX, 0, rowZ);
         // Face towards the left (walking in -X direction)
-        // Rotate -90 degrees (facing left on screen)
         mesh.rotation.y = -Math.PI / 2;
         this.scene.add(mesh);
         entity.setMesh(mesh);
