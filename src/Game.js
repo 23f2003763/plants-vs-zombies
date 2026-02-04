@@ -587,6 +587,47 @@ export class Game {
         return group;
     }
 
+    handleResize() {
+        if (!this.camera || !this.renderer) return;
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+
+        this.renderer.setSize(width, height);
+    }
+
+    startLevel(levelIndex) {
+        const levelConfig = GAME_CONFIG.LEVELS.find(l => l.id === levelIndex);
+        if (!levelConfig) {
+            console.log("Level not found");
+            return;
+        }
+
+        console.log(`Starting Level ${levelIndex}: ${levelConfig.name}`);
+        this.currentLevel = levelIndex;
+
+        // Update Weather
+        if (this.weatherSystem) {
+            this.weatherSystem.setWeather(levelConfig.weather);
+        }
+
+        // Update Waves
+        if (this.waveManager) {
+            this.waveManager.setConfig(levelConfig.waves);
+            // Start first wave immediately or after short delay
+            setTimeout(() => {
+                if (this.state === GAME_STATES.PLAYING) {
+                    this.waveManager.startWave();
+                    if (this.uiManager && this.uiManager.updateWaveDisplay) {
+                        this.uiManager.updateWaveDisplay(1, 0);
+                    }
+                }
+            }, 2000);
+        }
+    }
 
     startGame() {
         this.state = GAME_STATES.PLAYING;
