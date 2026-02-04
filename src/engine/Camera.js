@@ -1,5 +1,6 @@
 /**
  * Camera Controller - Isometric view with pan and zoom
+ * Fixed: Better mouse event handling for panning
  */
 import * as THREE from 'three';
 import { GAME_CONFIG } from '../Constants.js';
@@ -12,8 +13,8 @@ export class CameraController {
         // Camera bounds
         this.minZoom = 8;
         this.maxZoom = 25;
-        this.panSpeed = 0.01;
-        this.zoomSpeed = 0.5;
+        this.panSpeed = 0.03;  // Increased pan speed
+        this.zoomSpeed = 1.0;  // Increased zoom speed
 
         // Current state
         this.targetPosition = new THREE.Vector3(
@@ -33,17 +34,29 @@ export class CameraController {
         this.lastMouseY = 0;
 
         // Smooth movement
-        this.smoothness = 0.1;
+        this.smoothness = 0.15;
+
+        // Bound functions for proper removal
+        this.boundOnWheel = this.onWheel.bind(this);
+        this.boundOnMouseDown = this.onMouseDown.bind(this);
+        this.boundOnMouseMove = this.onMouseMove.bind(this);
+        this.boundOnMouseUp = this.onMouseUp.bind(this);
+        this.boundOnContextMenu = this.onContextMenu.bind(this);
 
         this.setupEventListeners();
     }
 
     setupEventListeners() {
-        this.domElement.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
-        this.domElement.addEventListener('mousedown', this.onMouseDown.bind(this));
-        this.domElement.addEventListener('mousemove', this.onMouseMove.bind(this));
-        this.domElement.addEventListener('mouseup', this.onMouseUp.bind(this));
-        this.domElement.addEventListener('mouseleave', this.onMouseUp.bind(this));
+        // Use document for mouse move/up to catch events outside canvas
+        this.domElement.addEventListener('wheel', this.boundOnWheel, { passive: false });
+        this.domElement.addEventListener('mousedown', this.boundOnMouseDown);
+        this.domElement.addEventListener('contextmenu', this.boundOnContextMenu);
+        document.addEventListener('mousemove', this.boundOnMouseMove);
+        document.addEventListener('mouseup', this.boundOnMouseUp);
+    }
+
+    onContextMenu(event) {
+        event.preventDefault();
     }
 
     onWheel(event) {
@@ -65,7 +78,9 @@ export class CameraController {
     }
 
     onMouseDown(event) {
-        if (event.button === 2 || event.button === 1) { // Right or middle click
+        // Right click (2) or middle click (1) to pan
+        if (event.button === 2 || event.button === 1) {
+            event.preventDefault();
             this.isPanning = true;
             this.lastMouseX = event.clientX;
             this.lastMouseY = event.clientY;
@@ -78,14 +93,14 @@ export class CameraController {
         const deltaX = (event.clientX - this.lastMouseX) * this.panSpeed;
         const deltaY = (event.clientY - this.lastMouseY) * this.panSpeed;
 
-        // Pan camera
+        // Pan camera and look target together
         this.targetPosition.x -= deltaX;
         this.lookAtTarget.x -= deltaX;
         this.targetPosition.z += deltaY;
         this.lookAtTarget.z += deltaY;
 
         // Clamp to bounds
-        const maxPan = 5;
+        const maxPan = 8;
         this.targetPosition.x = THREE.MathUtils.clamp(this.targetPosition.x, -maxPan, maxPan);
         this.lookAtTarget.x = THREE.MathUtils.clamp(this.lookAtTarget.x, -maxPan, maxPan);
         this.targetPosition.z = THREE.MathUtils.clamp(
@@ -99,19 +114,15 @@ export class CameraController {
         this.lastMouseY = event.clientY;
     }
 
-    onMouseUp() {
-        this.isPanning = false;
+    onMouseUp(event) {
+        if (event.button === 2 || event.button === 1) {
+            this.isPanning = false;
+        }
     }
 
     update(deltaTime) {
         // Smooth camera movement
         this.camera.position.lerp(this.targetPosition, this.smoothness);
-
-        // Update look at
-        const currentLookAt = new THREE.Vector3();
-        this.camera.getWorldDirection(currentLookAt);
-        currentLookAt.add(this.camera.position);
-        currentLookAt.lerp(this.lookAtTarget, this.smoothness);
         this.camera.lookAt(this.lookAtTarget);
     }
 
@@ -129,10 +140,10 @@ export class CameraController {
     }
 
     dispose() {
-        this.domElement.removeEventListener('wheel', this.onWheel.bind(this));
-        this.domElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
-        this.domElement.removeEventListener('mousemove', this.onMouseMove.bind(this));
-        this.domElement.removeEventListener('mouseup', this.onMouseUp.bind(this));
-        this.domElement.removeEventListener('mouseleave', this.onMouseUp.bind(this));
+        this.domElement.removeEventListener('wheel', this.boundOnWheel);
+        this.domElement.removeEventListener('mousedown', this.boundOnMouseDown);
+        this.domElement.removeEventListener('contextmenu', this.boundOnContextMenu);
+        document.removeEventListener('mousemove', this.boundOnMouseMove);
+        document.removeEventListener('mouseup', this.boundOnMouseUp);
     }
 }

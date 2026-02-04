@@ -1,5 +1,5 @@
 /**
- * Animation System - Programmatic animations for plants and zombies
+ * Animation System - Punchy, fast animations for plants and zombies
  */
 import * as THREE from 'three';
 
@@ -39,110 +39,134 @@ export class AnimationSystem {
         }
     }
 
-    // Gentle swaying for plants
+    // Bouncy, energetic swaying for plants
     animatePlantIdle(mesh, time) {
-        mesh.rotation.z = Math.sin(time * 2) * 0.05;
-        mesh.rotation.x = Math.sin(time * 1.5 + 0.5) * 0.03;
+        const bounce = Math.sin(time * 4) * 0.08;
+        const sway = Math.sin(time * 3 + 0.5) * 0.06;
+
+        mesh.rotation.z = sway;
+        mesh.rotation.x = Math.sin(time * 2.5) * 0.04;
+        mesh.position.y = Math.abs(bounce) * 0.5;
     }
 
-    // Sunflower head tracking / bobbing
+    // Sunflower happy bobbing
     animateSunflowerIdle(mesh, time) {
-        mesh.rotation.z = Math.sin(time * 1.5) * 0.08;
-        mesh.position.y = Math.sin(time * 2) * 0.02;
+        mesh.rotation.z = Math.sin(time * 3) * 0.12;
+        mesh.position.y = Math.sin(time * 4) * 0.05;
+        // Slight scale pulse
+        const pulse = 1 + Math.sin(time * 5) * 0.03;
+        mesh.scale.setScalar(pulse);
     }
 
-    // Zombie walking animation
+    // Fast, aggressive zombie walking
     animateZombieWalk(mesh, time) {
-        const walkSpeed = 3;
-        const armSwing = 0.4;
-        const legSwing = 0.5;
+        const walkSpeed = 8; // Much faster animation
+        const armSwing = 0.6;
+        const legSwing = 0.7;
 
         mesh.traverse((child) => {
             if (child.userData.isArm) {
-                // Stiff zombie arms swinging slightly
                 const isLeft = child.position.x < 0;
-                child.rotation.x = -0.5 + Math.sin(time * walkSpeed + (isLeft ? 0 : Math.PI)) * armSwing;
+                // Arms reach forward aggressively
+                child.rotation.x = -0.7 + Math.sin(time * walkSpeed + (isLeft ? 0 : Math.PI)) * armSwing;
             }
             if (child.userData.isLeg) {
-                // Leg walking animation
                 const isLeft = child.position.x < 0;
                 child.rotation.x = Math.sin(time * walkSpeed + (isLeft ? 0 : Math.PI)) * legSwing;
             }
         });
 
-        // Slight body bob
-        mesh.position.y = Math.abs(Math.sin(time * walkSpeed * 2)) * 0.05;
-        // Slight body sway
-        mesh.rotation.z = Math.sin(time * walkSpeed) * 0.03;
+        // Exaggerated body bob and lurch
+        mesh.position.y = Math.abs(Math.sin(time * walkSpeed * 2)) * 0.1;
+        mesh.rotation.z = Math.sin(time * walkSpeed) * 0.08;
+        mesh.rotation.x = 0.15 + Math.sin(time * walkSpeed * 2) * 0.05; // Lean forward
     }
 
-    // Zombie attacking animation
+    // Frantic zombie attacking
     animateZombieAttack(mesh, time) {
-        const attackSpeed = 6;
+        const attackSpeed = 12; // Very fast attack animation
 
         mesh.traverse((child) => {
             if (child.userData.isArm) {
-                // Arms lunging forward
-                child.rotation.x = -0.8 + Math.sin(time * attackSpeed) * 0.3;
+                // Rapid chomping motion
+                child.rotation.x = -1.0 + Math.sin(time * attackSpeed) * 0.5;
             }
         });
 
-        // Lean forward during attack
-        mesh.rotation.x = 0.1 + Math.sin(time * attackSpeed) * 0.05;
+        // Aggressive lean forward and shake
+        mesh.rotation.x = 0.25 + Math.sin(time * attackSpeed) * 0.1;
+        mesh.position.y = Math.abs(Math.sin(time * attackSpeed * 2)) * 0.08;
+        mesh.rotation.z = Math.sin(time * attackSpeed * 1.5) * 0.06;
     }
 
-    // Floating sun animation
+    // Bouncy floating sun
     animateSunFloat(mesh, time) {
-        mesh.rotation.z = time * 0.5;
-        mesh.position.y = Math.sin(time * 2) * 0.1;
+        mesh.rotation.z = time * 1.5;
+        mesh.rotation.y = time * 0.5;
+        mesh.position.y = Math.sin(time * 3) * 0.15;
+        // Pulse
+        const pulse = 1 + Math.sin(time * 6) * 0.1;
+        mesh.scale.setScalar(pulse);
     }
 
-    // Cherry bomb fuse sparking
+    // Intense cherry bomb shaking
     animateCherryBomb(mesh, time) {
         mesh.traverse((child) => {
             if (child.userData.isSpark) {
-                child.scale.setScalar(0.8 + Math.sin(time * 20) * 0.4);
-                child.material.emissiveIntensity = 1 + Math.sin(time * 30) * 0.5;
+                child.scale.setScalar(0.5 + Math.sin(time * 30) * 0.8);
+                if (child.material) {
+                    child.material.emissiveIntensity = 1 + Math.sin(time * 40) * 1;
+                }
             }
         });
 
-        // Shake before explosion
-        mesh.rotation.z = Math.sin(time * 30) * 0.05;
-        mesh.rotation.x = Math.sin(time * 25) * 0.05;
+        // Intense shaking before explosion
+        const intensity = Math.min(time * 0.5, 1);
+        mesh.rotation.z = Math.sin(time * 40) * 0.1 * intensity;
+        mesh.rotation.x = Math.sin(time * 35) * 0.1 * intensity;
+        mesh.position.y = Math.abs(Math.sin(time * 50)) * 0.05 * intensity;
     }
 
-    // Shoot animation (recoil)
+    // Snappy shoot recoil
     animateShoot(mesh) {
-        // Quick recoil and return
         const originalZ = mesh.rotation.z;
-        mesh.rotation.z -= 0.2;
+        const originalScale = mesh.scale.x;
+
+        // Quick scale punch
+        mesh.scale.setScalar(1.2);
+        mesh.rotation.z -= 0.3;
 
         setTimeout(() => {
+            mesh.scale.setScalar(originalScale);
             mesh.rotation.z = originalZ;
-        }, 100);
+        }, 80);
     }
 
-    // Death animation for plant/zombie
+    // Fast, dramatic death animation
     animateDeath(mesh, callback) {
         const startY = mesh.position.y;
         const startScale = mesh.scale.x;
-        const duration = 500;
+        const duration = 350; // Faster death
         const startTime = performance.now();
 
         const animate = () => {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Fall and shrink
-            mesh.position.y = startY - progress * 0.5;
-            mesh.scale.setScalar(startScale * (1 - progress * 0.5));
-            mesh.rotation.z = progress * Math.PI / 4;
+            // Ease out bounce
+            const eased = 1 - Math.pow(1 - progress, 3);
+
+            // Fall, spin and shrink dramatically
+            mesh.position.y = startY - eased * 0.8;
+            mesh.scale.setScalar(startScale * (1 - eased * 0.8));
+            mesh.rotation.z = eased * Math.PI / 2;
+            mesh.rotation.x = eased * 0.5;
 
             // Fade out
             mesh.traverse((child) => {
                 if (child.isMesh && child.material) {
                     child.material.transparent = true;
-                    child.material.opacity = 1 - progress;
+                    child.material.opacity = 1 - eased;
                 }
             });
 
@@ -156,18 +180,21 @@ export class AnimationSystem {
         animate();
     }
 
-    // Explosion animation
+    // Punchy explosion animation
     animateExplosion(explosionMesh, callback) {
-        const duration = 300;
+        const duration = 250; // Faster explosion
         const startTime = performance.now();
-        const maxScale = 2;
+        const maxScale = 2.5;
 
         const animate = () => {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Expand and fade
-            const scale = progress * maxScale;
+            // Elastic ease out for pop effect
+            const eased = 1 - Math.pow(1 - progress, 4);
+
+            // Rapid expand and fade
+            const scale = eased * maxScale;
             explosionMesh.scale.setScalar(scale);
 
             explosionMesh.traverse((child) => {
@@ -186,21 +213,22 @@ export class AnimationSystem {
         animate();
     }
 
-    // Sun collection animation
+    // Zippy sun collection
     animateSunCollect(mesh, targetPosition, callback) {
         const startPos = mesh.position.clone();
-        const duration = 300;
+        const duration = 200; // Very fast collection
         const startTime = performance.now();
 
         const animate = () => {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Ease out
-            const eased = 1 - Math.pow(1 - progress, 3);
+            // Quick ease out
+            const eased = 1 - Math.pow(1 - progress, 4);
 
             mesh.position.lerpVectors(startPos, targetPosition, eased);
-            mesh.scale.setScalar(1 - progress * 0.5);
+            mesh.scale.setScalar((1 - progress * 0.7) * (1 + Math.sin(progress * Math.PI) * 0.3));
+            mesh.rotation.z += 0.3;
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
@@ -212,22 +240,25 @@ export class AnimationSystem {
         animate();
     }
 
-    // Plant placement pop-in animation
+    // Bouncy plant placement pop-in
     animatePlantPlace(mesh) {
         mesh.scale.setScalar(0);
+        mesh.position.y = -0.5;
         const targetScale = 1;
-        const duration = 200;
+        const duration = 150; // Snappy placement
         const startTime = performance.now();
 
         const animate = () => {
             const elapsed = performance.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Spring effect
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const overshoot = 1 + 0.2 * Math.sin(progress * Math.PI);
+            // Elastic bounce
+            const elastic = 1 - Math.pow(1 - progress, 3);
+            const overshoot = 1 + 0.3 * Math.sin(progress * Math.PI * 1.5);
 
-            mesh.scale.setScalar(eased * overshoot * targetScale);
+            mesh.scale.setScalar(elastic * overshoot * targetScale);
+            mesh.position.y = (1 - elastic) * -0.3;
+            mesh.rotation.z = (1 - elastic) * 0.5;
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
@@ -235,5 +266,26 @@ export class AnimationSystem {
         };
 
         animate();
+    }
+
+    // Hit flash effect
+    animateHit(mesh) {
+        const originalMaterials = [];
+
+        mesh.traverse((child) => {
+            if (child.isMesh && child.material) {
+                originalMaterials.push({
+                    mesh: child,
+                    color: child.material.color.clone()
+                });
+                child.material.color.setHex(0xFFFFFF);
+            }
+        });
+
+        setTimeout(() => {
+            for (const data of originalMaterials) {
+                data.mesh.material.color.copy(data.color);
+            }
+        }, 50);
     }
 }

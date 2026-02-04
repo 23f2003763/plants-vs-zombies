@@ -111,6 +111,8 @@ export class WaveManager {
         // Create mesh
         const mesh = this.modelGenerator.createZombie(type);
         mesh.position.set(this.spawnX, 0, rowZ);
+        // Face towards the house (walking in -X direction)
+        mesh.rotation.y = Math.PI;
         this.scene.add(mesh);
         entity.setMesh(mesh);
 

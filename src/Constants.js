@@ -28,12 +28,12 @@ export const GAME_CONFIG = {
 
     // Sun Settings
     SUN: {
-        STARTING_AMOUNT: 50,
-        NATURAL_SPAWN_INTERVAL: 10000, // ms
+        STARTING_AMOUNT: 150,
+        NATURAL_SPAWN_INTERVAL: 6000, // ms - faster sun spawns
         NATURAL_SUN_VALUE: 25,
-        SUNFLOWER_INTERVAL: 7000,
+        SUNFLOWER_INTERVAL: 5000,
         SUNFLOWER_VALUE: 25,
-        COLLECT_SPEED: 5
+        COLLECT_SPEED: 8
     },
 
     // Plant Types
@@ -42,10 +42,10 @@ export const GAME_CONFIG = {
             id: 'peashooter',
             name: 'Peashooter',
             cost: 100,
-            health: 100,
-            cooldown: 2000,
-            fireRate: 1500,
-            damage: 20,
+            health: 120,
+            cooldown: 1500,
+            fireRate: 800,  // Much faster firing
+            damage: 25,
             color: 0x4CAF50
         },
         SUNFLOWER: {
@@ -53,8 +53,8 @@ export const GAME_CONFIG = {
             name: 'Sunflower',
             cost: 50,
             health: 100,
-            cooldown: 2000,
-            sunInterval: 7000,
+            cooldown: 1500,
+            sunInterval: 5000,
             sunValue: 25,
             color: 0xFFD700
         },
@@ -62,8 +62,8 @@ export const GAME_CONFIG = {
             id: 'wallnut',
             name: 'Wall-nut',
             cost: 50,
-            health: 400,
-            cooldown: 5000,
+            health: 500,
+            cooldown: 4000,
             color: 0x8B4513
         },
         CHERRYBOMB: {
@@ -71,9 +71,9 @@ export const GAME_CONFIG = {
             name: 'Cherry Bomb',
             cost: 150,
             health: 1,
-            cooldown: 10000,
-            explosionRadius: 1.5,
-            explosionDamage: 1800,
+            cooldown: 8000,
+            explosionRadius: 2.0,
+            explosionDamage: 2000,
             color: 0xF44336
         }
     },
@@ -84,36 +84,36 @@ export const GAME_CONFIG = {
             id: 'basic',
             name: 'Basic Zombie',
             health: 100,
-            speed: 0.3,
-            damage: 20,
-            attackSpeed: 1000,
+            speed: 1.2,
+            damage: 25,
+            attackSpeed: 600,
             color: 0x98FB98
         },
         CONE: {
             id: 'cone',
             name: 'Cone Zombie',
             health: 200,
-            speed: 0.3,
-            damage: 20,
-            attackSpeed: 1000,
+            speed: 1.0,
+            damage: 25,
+            attackSpeed: 600,
             color: 0x98FB98
         },
         BUCKET: {
             id: 'bucket',
             name: 'Bucket Zombie',
             health: 400,
-            speed: 0.25,
-            damage: 25,
-            attackSpeed: 1000,
+            speed: 0.8,
+            damage: 30,
+            attackSpeed: 700,
             color: 0x98FB98
         },
         FLAG: {
             id: 'flag',
             name: 'Flag Zombie',
             health: 100,
-            speed: 0.5,
-            damage: 20,
-            attackSpeed: 1000,
+            speed: 1.8,
+            damage: 25,
+            attackSpeed: 500,
             color: 0x98FB98
         }
     },
@@ -123,53 +123,53 @@ export const GAME_CONFIG = {
         {
             number: 1,
             zombies: [
-                { type: 'basic', count: 3, interval: 5000 }
+                { type: 'basic', count: 4, interval: 3000 }
             ],
-            delay: 5000
+            delay: 2000
         },
         {
             number: 2,
             zombies: [
-                { type: 'basic', count: 5, interval: 4000 },
-                { type: 'cone', count: 2, interval: 6000 }
+                { type: 'basic', count: 6, interval: 2500 },
+                { type: 'cone', count: 2, interval: 4000 }
             ],
-            delay: 3000
+            delay: 2000
         },
         {
             number: 3,
             zombies: [
-                { type: 'basic', count: 6, interval: 3500 },
-                { type: 'cone', count: 4, interval: 5000 },
-                { type: 'bucket', count: 1, interval: 10000 }
+                { type: 'basic', count: 8, interval: 2000 },
+                { type: 'cone', count: 4, interval: 3000 },
+                { type: 'bucket', count: 1, interval: 6000 }
             ],
-            delay: 3000
+            delay: 1500
         },
         {
             number: 4,
             zombies: [
-                { type: 'basic', count: 8, interval: 3000 },
-                { type: 'cone', count: 5, interval: 4000 },
-                { type: 'bucket', count: 2, interval: 8000 },
-                { type: 'flag', count: 1, interval: 15000 }
+                { type: 'basic', count: 10, interval: 1800 },
+                { type: 'cone', count: 6, interval: 2500 },
+                { type: 'bucket', count: 3, interval: 5000 },
+                { type: 'flag', count: 1, interval: 8000 }
             ],
-            delay: 2000
+            delay: 1500
         },
         {
             number: 5,
             zombies: [
-                { type: 'basic', count: 10, interval: 2500 },
-                { type: 'cone', count: 6, interval: 3500 },
-                { type: 'bucket', count: 4, interval: 6000 },
-                { type: 'flag', count: 2, interval: 10000 }
+                { type: 'basic', count: 12, interval: 1500 },
+                { type: 'cone', count: 8, interval: 2000 },
+                { type: 'bucket', count: 5, interval: 4000 },
+                { type: 'flag', count: 3, interval: 6000 }
             ],
-            delay: 2000
+            delay: 1000
         }
     ],
 
     // Projectile Settings
     PROJECTILE: {
-        SPEED: 8,
-        SIZE: 0.15,
+        SPEED: 12,
+        SIZE: 0.18,
         COLOR: 0x00FF00
     },
 
