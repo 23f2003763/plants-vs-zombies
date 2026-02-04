@@ -711,6 +711,58 @@ export class Game {
         this.gridSystem.setSelectedPlant(plantType);
     }
 
+    updateGameState(deltaTime) {
+        const elapsedTime = this.time.elapsedTime;
+
+        // Update systems
+        this.sunSystem.update(deltaTime, elapsedTime);
+        this.waveManager.update(deltaTime, elapsedTime);
+        this.zombieAI.update(deltaTime, elapsedTime);
+        this.combatSystem.update(deltaTime, elapsedTime, this.gridSystem);
+
+        if (this.plantSystem) this.plantSystem.update(deltaTime);
+        if (this.weatherSystem) this.weatherSystem.update(deltaTime);
+
+        // Check Wave Completion & Transition
+        if (this.waveManager.isWaveComplete() && !this.isWaveTransitioning) {
+            this.isWaveTransitioning = true;
+            console.log("Wave Complete! Starting next in 2s...");
+
+            setTimeout(() => {
+                if (this.state === GAME_STATES.PLAYING) {
+                    // Check logic: Are there more waves in THIS level?
+                    if (this.waveManager.hasMoreWaves()) {
+                        this.waveManager.startWave();
+                        this.uiManager.updateWaveDisplay(this.waveManager.getCurrentWave(), 0);
+                    }
+                    // Else if Level Complete (all waves done)
+                    else if (this.waveManager.allWavesComplete) {
+                        if (this.currentLevel < GAME_CONFIG.LEVELS.length) {
+                            console.log("Level Complete! Next Level...");
+                            this.uiManager.showMessage(`Level ${this.currentLevel} Complete!`, 3000);
+
+                            this.currentLevel++;
+                            setTimeout(() => this.startLevel(this.currentLevel), 3000);
+                        } else {
+                            // Win condition handled by checkGameEnd
+                        }
+                    }
+                }
+                this.isWaveTransitioning = false;
+            }, 2000);
+        }
+
+        // Update progress UI
+        const waveProgress = this.waveManager.getProgress();
+        this.uiManager.updateWaveDisplay(
+            this.waveManager.getCurrentWave(),
+            waveProgress.progress,
+            waveProgress.remaining || 0
+        );
+
+        this.checkGameEnd();
+    }
+
     gameLoop() {
         this.animationFrameId = requestAnimationFrame(() => this.gameLoop());
 
@@ -728,7 +780,7 @@ export class Game {
 
         // Game state specific updates
         if (this.state === GAME_STATES.PLAYING) {
-            this.updateGame(deltaTime);
+            this.updateGameState(deltaTime);
         }
 
         // Update UI

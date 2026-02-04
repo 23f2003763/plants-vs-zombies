@@ -56,6 +56,7 @@ export class WaveManager {
 
         const waveData = this.waves[this.currentWave - 1];
         this.waveActive = true;
+        this.waveComplete = false; // Reset completion flag
         this.waveStartTime = performance.now();
         this.zombiesSpawned = 0;
         this.spawnTimers = [];
@@ -81,6 +82,11 @@ export class WaveManager {
         return true;
     }
 
+    isWaveComplete() {
+        // Return the persistent flag
+        return this.waveComplete;
+    }
+
     update(deltaTime, elapsedTime) {
         if (!this.waveActive || this.allWavesComplete) return;
 
@@ -92,6 +98,18 @@ export class WaveManager {
                 this.spawnZombie(timer.type);
                 timer.spawned = true;
                 this.zombiesSpawned++;
+            }
+        }
+
+        // Check completion
+        const allSpawned = this.zombiesSpawned >= this.totalZombiesInWave;
+        if (allSpawned) {
+            const zombiesRemaining = this.world.getEntitiesByType(ENTITY_TYPES.ZOMBIE)
+                .filter(z => z.active).length;
+
+            if (zombiesRemaining === 0) {
+                this.waveActive = false;
+                this.waveComplete = true; // Set flag
             }
         }
     }

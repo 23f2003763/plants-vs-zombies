@@ -330,4 +330,49 @@ export class UIManager {
             }
         });
     }
+    updateWaveDisplay(wave, progress, remaining) {
+        if (this.elements.waveText) {
+            this.elements.waveText.textContent = `Wave ${wave}`;
+        }
+
+        if (this.elements.waveProgressFill) {
+            this.elements.waveProgressFill.style.width = `${progress * 100}%`;
+        }
+
+        if (this.elements.zombiesRemaining) {
+            this.elements.zombiesRemaining.textContent = remaining > 0 ? remaining : '';
+        }
+    }
+
+    showMessage(text, duration = 3000) {
+        // Create or reuse message element
+        let msgEl = document.getElementById('game-message');
+        if (!msgEl) {
+            msgEl = document.createElement('div');
+            msgEl.id = 'game-message';
+            msgEl.style.position = 'absolute';
+            msgEl.style.top = '20%';
+            msgEl.style.left = '50%';
+            msgEl.style.transform = 'translate(-50%, -50%)';
+            msgEl.style.fontSize = '3rem';
+            msgEl.style.color = 'white';
+            msgEl.style.textShadow = '2px 2px 4px black';
+            msgEl.style.fontFamily = 'Arial, sans-serif';
+            msgEl.style.pointerEvents = 'none';
+            msgEl.style.zIndex = '1000';
+            msgEl.style.opacity = '0';
+            msgEl.style.transition = 'opacity 0.3s';
+            document.body.appendChild(msgEl);
+        }
+
+        msgEl.textContent = text;
+        msgEl.style.opacity = '1';
+
+        // Clear previous timeout
+        if (this.messageTimeout) clearTimeout(this.messageTimeout);
+
+        this.messageTimeout = setTimeout(() => {
+            msgEl.style.opacity = '0';
+        }, duration);
+    }
 }
