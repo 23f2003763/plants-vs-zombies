@@ -42,12 +42,12 @@ export const GAME_CONFIG = {
         PEASHOOTER: {
             id: 'peashooter',
             name: 'Peashooter',
-            description: 'Shoots peas at zombies',
+            description: 'Rapid-fire pea machine gun!',
             cost: 100,
             health: 300,
-            cooldown: 3000,  // 3 second cooldown - FAST
-            fireRate: 1200,  // Shoots faster
-            damage: 25,
+            cooldown: 3000,  // 3 second cooldown
+            fireRate: 200,   // MACHINE GUN: 5 shots per second!
+            damage: 15,      // Reduced damage (was 25)
             color: 0x4CAF50
         },
         SUNFLOWER: {
@@ -169,11 +169,11 @@ export const GAME_CONFIG = {
         }
     ],
 
-    // Projectile Settings
+    // Projectile Settings - BIG visible peas
     PROJECTILE: {
-        SPEED: 12,
-        SIZE: 0.15,
-        COLOR: 0x00FF00
+        SPEED: 15,
+        SIZE: 0.25,  // Much bigger for visibility
+        COLOR: 0x00FF00  // Bright green
     },
 
     // Audio Settings

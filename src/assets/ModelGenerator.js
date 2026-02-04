@@ -515,30 +515,45 @@ export class ModelGenerator {
     createProjectile() {
         const group = new THREE.Group();
 
+        // Main pea - BRIGHT green
         const peaGeom = new THREE.SphereGeometry(
             GAME_CONFIG.PROJECTILE.SIZE,
-            8, 6
+            12, 8
         );
-        const peaMat = this.getMaterial(
-            GAME_CONFIG.PROJECTILE.COLOR,
-            { emissive: 0x00AA00, emissiveIntensity: 0.3 }
-        );
+        const peaMat = new THREE.MeshBasicMaterial({
+            color: 0x44FF44  // Bright lime green
+        });
         const pea = new THREE.Mesh(peaGeom, peaMat);
-        pea.castShadow = true;
         group.add(pea);
 
-        // Glow effect
+        // Outer glow - bigger for visibility
         const glowGeom = new THREE.SphereGeometry(
-            GAME_CONFIG.PROJECTILE.SIZE * 1.5,
+            GAME_CONFIG.PROJECTILE.SIZE * 1.8,
             8, 6
         );
         const glowMat = new THREE.MeshBasicMaterial({
-            color: GAME_CONFIG.PROJECTILE.COLOR,
+            color: 0x88FF88,
             transparent: true,
-            opacity: 0.3
+            opacity: 0.4
         });
         const glow = new THREE.Mesh(glowGeom, glowMat);
         group.add(glow);
+
+        // Trail effect
+        const trailGeom = new THREE.ConeGeometry(
+            GAME_CONFIG.PROJECTILE.SIZE * 0.6,
+            GAME_CONFIG.PROJECTILE.SIZE * 2,
+            6
+        );
+        const trailMat = new THREE.MeshBasicMaterial({
+            color: 0x22AA22,
+            transparent: true,
+            opacity: 0.5
+        });
+        const trail = new THREE.Mesh(trailGeom, trailMat);
+        trail.position.x = -GAME_CONFIG.PROJECTILE.SIZE * 1.2;
+        trail.rotation.z = -Math.PI / 2;
+        group.add(trail);
 
         return group;
     }
