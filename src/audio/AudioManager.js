@@ -177,15 +177,20 @@ export class AudioManager {
     }
 
     createSunCollect() {
-        const duration = 0.2;
+        const duration = 0.4;
         const buffer = this.context.createBuffer(1, duration * this.context.sampleRate, this.context.sampleRate);
         const data = buffer.getChannelData(0);
 
         for (let i = 0; i < data.length; i++) {
             const t = i / this.context.sampleRate;
-            // Bright ascending chime
-            const freq = 600 + t * 400;
-            data[i] = Math.sin(t * freq * Math.PI * 2) * Math.exp(-t * 10) * 0.4;
+            // Bright ascending chime with harmonics
+            const freq1 = 800 + t * 600;
+            const freq2 = 1200 + t * 400;
+            const chime1 = Math.sin(t * freq1 * Math.PI * 2) * Math.exp(-t * 8) * 0.4;
+            const chime2 = Math.sin(t * freq2 * Math.PI * 2) * Math.exp(-t * 10) * 0.25;
+            // Add a pleasant bell-like overtone
+            const bell = Math.sin(t * 1600 * Math.PI * 2) * Math.exp(-t * 15) * 0.15;
+            data[i] = (chime1 + chime2 + bell) * 0.6;
         }
 
         return buffer;

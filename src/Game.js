@@ -723,7 +723,8 @@ export class Game {
         const waveProgress = this.waveManager.getProgress();
         this.uiManager.updateWaveDisplay(
             this.waveManager.getCurrentWave(),
-            waveProgress.progress
+            waveProgress.progress,
+            waveProgress.remaining || 0
         );
 
         // Check win/lose conditions

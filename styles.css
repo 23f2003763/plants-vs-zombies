@@ -1,24 +1,8 @@
-/* ============================================
+/* ===============================================
    Plants vs Zombies 3D - Styles
-   ============================================ */
+   Professional UI with plant cards at bottom
+   =============================================== */
 
-/* CSS Variables */
-:root {
-  --primary-green: #4CAF50;
-  --dark-green: #2E7D32;
-  --zombie-green: #8BC34A;
-  --sun-yellow: #FFD700;
-  --sun-orange: #FFA500;
-  --danger-red: #F44336;
-  --bg-dark: #1a1a2e;
-  --bg-darker: #16213e;
-  --text-light: #ffffff;
-  --text-shadow: rgba(0, 0, 0, 0.5);
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-}
-
-/* Reset & Base */
 * {
   margin: 0;
   padding: 0;
@@ -26,19 +10,16 @@
 }
 
 body {
-  font-family: 'Segoe UI', 'Arial', sans-serif;
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', sans-serif;
   overflow: hidden;
-  background: var(--bg-dark);
-  color: var(--text-light);
+  background: #1a1a2e;
 }
 
 /* Game Container */
 #game-container {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
+  position: relative;
 }
 
 #game-canvas {
@@ -52,17 +33,19 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 100;
 }
 
-#ui-overlay > * {
+#ui-overlay>* {
   pointer-events: auto;
 }
 
-/* Menu Screens */
+/* ===============================================
+   MENU SCREENS
+   =============================================== */
 .menu-screen {
   position: absolute;
   top: 0;
@@ -72,8 +55,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-  animation: fadeIn 0.3s ease;
+  background: linear-gradient(135deg,
+      rgba(26, 26, 46, 0.95) 0%,
+      rgba(22, 33, 62, 0.95) 100%);
+  backdrop-filter: blur(10px);
 }
 
 .menu-screen.hidden {
@@ -81,411 +66,678 @@ body {
 }
 
 .menu-content {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 48px 64px;
   text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  padding: 3rem;
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Game Title */
 .game-title {
+  font-family: 'Bangers', cursive;
   font-size: 4rem;
-  margin-bottom: 48px;
-  text-shadow: 3px 3px 6px var(--text-shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  margin-bottom: 2rem;
+  text-shadow:
+    4px 4px 0 rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(255, 215, 0, 0.5);
+  letter-spacing: 4px;
 }
 
 .title-plants {
-  color: var(--primary-green);
-  text-shadow: 2px 2px 0 var(--dark-green);
+  color: #4CAF50;
+  text-shadow: 3px 3px 0 #2E7D32;
 }
 
 .title-vs {
+  color: #fff;
   font-size: 2rem;
-  color: #888;
+  margin: 0 0.5rem;
 }
 
 .title-zombies {
-  color: var(--zombie-green);
-  text-shadow: 2px 2px 0 #558B2F;
+  color: #9C27B0;
+  text-shadow: 3px 3px 0 #6A1B9A;
 }
 
 .title-3d {
-  font-size: 2rem;
-  color: var(--sun-yellow);
-  text-shadow: 2px 2px 0 var(--sun-orange);
+  color: #FFD700;
+  text-shadow: 3px 3px 0 #FFA000;
+  font-size: 2.5rem;
+  vertical-align: super;
 }
 
 /* Menu Buttons */
 .menu-buttons {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .menu-btn {
-  padding: 16px 48px;
-  font-size: 1.2rem;
-  font-weight: 600;
+  padding: 1rem 3rem;
+  font-size: 1.4rem;
+  font-family: 'Fredoka One', sans-serif;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text-light);
-  min-width: 200px;
-}
-
-.menu-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .menu-btn.primary {
-  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
-  border: none;
+  background: linear-gradient(180deg, #4CAF50 0%, #388E3C 100%);
+  color: white;
+  box-shadow:
+    0 6px 0 #2E7D32,
+    0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .menu-btn.primary:hover {
-  background: linear-gradient(135deg, #5CBF60, var(--primary-green));
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 #2E7D32,
+    0 12px 25px rgba(0, 0, 0, 0.4);
+}
+
+.menu-btn.primary:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #2E7D32,
+    0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-btn:not(.primary) {
+  background: linear-gradient(180deg, #5C6BC0 0%, #3949AB 100%);
+  color: white;
+  box-shadow:
+    0 6px 0 #283593,
+    0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.menu-btn:not(.primary):hover {
+  transform: translateY(-2px);
+}
+
+.menu-btn:not(.primary):active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #283593,
+    0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Settings */
 .settings-group {
-  margin: 20px 0;
+  margin: 1.5rem 0;
   text-align: left;
 }
 
 .settings-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
 }
 
 .settings-group input[type="range"] {
   width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--glass-bg);
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
   appearance: none;
+  cursor: pointer;
 }
 
 .settings-group input[type="range"]::-webkit-slider-thumb {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--primary-green);
-  cursor: pointer;
+  background: #FFD700;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Game HUD */
+/* ===============================================
+   GAME HUD
+   =============================================== */
 #game-hud {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
+}
+
+#game-hud>* {
+  pointer-events: auto;
 }
 
 #game-hud.hidden {
   display: none;
 }
 
-#game-hud > * {
-  pointer-events: auto;
+/* Top Bar */
+#top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0) 100%);
 }
 
 /* Sun Counter */
 #sun-counter {
-  position: absolute;
-  top: 20px;
-  left: 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 12px 24px;
+  gap: 0.8rem;
+  background: linear-gradient(145deg, #FFA000 0%, #FF6F00 100%);
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  box-shadow:
+    0 4px 0 #E65100,
+    0 6px 20px rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
 }
 
 .sun-icon {
-  width: 40px;
-  height: 40px;
-  background: radial-gradient(circle, var(--sun-yellow), var(--sun-orange));
+  width: 36px;
+  height: 36px;
+  background: radial-gradient(circle at 30% 30%, #FFEB3B, #FFC107);
   border-radius: 50%;
-  box-shadow: 0 0 20px var(--sun-yellow);
+  box-shadow:
+    0 0 20px #FFD700,
+    0 0 40px rgba(255, 215, 0, 0.5);
+  animation: sunPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 #sun-amount {
   font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--sun-yellow);
-  text-shadow: 1px 1px 2px var(--text-shadow);
-}
-
-/* Plant Bar */
-#plant-bar {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 12px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.plant-slot {
-  width: 80px;
-  height: 100px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  border: 2px solid transparent;
-}
-
-.plant-slot:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary-green);
-}
-
-.plant-slot.selected {
-  border-color: var(--sun-yellow);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.plant-slot.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.plant-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  margin-bottom: 4px;
-}
-
-.peashooter-icon {
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-}
-
-.sunflower-icon {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-}
-
-.wallnut-icon {
-  background: linear-gradient(135deg, #8B4513, #A0522D);
-}
-
-.cherrybomb-icon {
-  background: linear-gradient(135deg, #F44336, #C62828);
-}
-
-.plant-cost {
-  font-size: 0.9rem;
-  color: var(--sun-yellow);
-  font-weight: 600;
-}
-
-.cooldown-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 0%;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 0 0 12px 12px;
-  transition: height 0.1s linear;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  min-width: 50px;
 }
 
 /* Wave Info */
 #wave-info {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 12px 24px;
-  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 #wave-text {
+  color: white;
   font-size: 1.2rem;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 #wave-progress-bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  width: 200px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
   overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 #wave-progress-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--primary-green), var(--zombie-green));
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
   border-radius: 4px;
   transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+#zombies-remaining {
+  color: #FF5722;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Pause Button */
 #pause-btn {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  color: white;
   font-size: 1.5rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(5px);
+}
+
+#pause-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* ===============================================
+   PLANT BAR (Bottom)
+   =============================================== */
+#plant-bar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.7) 100%);
+  border-radius: 20px 20px 0 0;
+}
+
+.plant-slot {
+  position: relative;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-#pause-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
+.plant-slot:hover {
+  transform: translateY(-8px) scale(1.05);
 }
 
-/* Win/Lose Screens */
+.plant-slot.selected {
+  transform: translateY(-12px) scale(1.08);
+}
+
+.plant-slot.selected .plant-card {
+  border-color: #FFD700;
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.6),
+    0 8px 0 #5D4037;
+}
+
+.plant-slot.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.plant-slot.disabled .plant-card {
+  filter: grayscale(0.5);
+}
+
+/* Plant Card */
+.plant-card {
+  width: 110px;
+  background: linear-gradient(145deg, #6D4C41 0%, #4E342E 100%);
+  border-radius: 12px;
+  padding: 0.6rem;
+  border: 3px solid #8D6E63;
+  box-shadow:
+    0 6px 0 #3E2723,
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Plant Images - CSS art */
+.plant-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  margin-bottom: 0.3rem;
+}
+
+.peashooter-img {
+  background:
+    radial-gradient(circle at 50% 40%, #66BB6A 0%, #4CAF50 50%, #388E3C 100%),
+    linear-gradient(to bottom, transparent 60%, #2E7D32 60%);
+  position: relative;
+}
+
+.peashooter-img::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 15px;
+  background: #4CAF50;
+  border-radius: 0 50% 50% 0;
+  top: 35%;
+  right: 5px;
+}
+
+.peashooter-img::after {
+  content: '👀';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+}
+
+.sunflower-img {
+  background: radial-gradient(circle at 50% 50%, #8D6E63 30%, #FFD54F 30%, #FFC107 60%, #FF9800 100%);
+  border-radius: 50%;
+  position: relative;
+}
+
+.sunflower-img::after {
+  content: '😊';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+}
+
+.wallnut-img {
+  background: radial-gradient(circle at 40% 40%, #A1887F 0%, #8D6E63 50%, #6D4C41 100%);
+  border-radius: 45% 45% 50% 50%;
+  position: relative;
+}
+
+.wallnut-img::after {
+  content: '😤';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+}
+
+.cherrybomb-img {
+  background:
+    radial-gradient(circle at 30% 50%, #E53935 0%, #C62828 100%) no-repeat 15% 50% / 45% 80%,
+    radial-gradient(circle at 70% 50%, #E53935 0%, #C62828 100%) no-repeat 55% 45% / 45% 80%,
+    linear-gradient(#4CAF50, #388E3C) no-repeat 45% 10% / 10% 20%;
+  position: relative;
+}
+
+.cherrybomb-img::after {
+  content: '😠';
+  position: absolute;
+  top: 45%;
+  left: 25%;
+  font-size: 12px;
+}
+
+/* Plant Info */
+.plant-info {
+  text-align: center;
+}
+
+.plant-name {
+  display: block;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.plant-desc {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.6rem;
+}
+
+/* Plant Cost */
+.plant-cost {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+}
+
+.cost-sun {
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 30% 30%, #FFEB3B, #FFC107);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.plant-cost span {
+  color: #FFD700;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Cooldown Overlay */
+.cooldown-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  display: none;
+}
+
+.plant-slot.on-cooldown .cooldown-overlay {
+  display: block;
+}
+
+/* Hotkey Badge */
+.hotkey {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(145deg, #5C6BC0, #3949AB);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ===============================================
+   WIN/LOSE SCREENS
+   =============================================== */
 .win-title {
-  color: var(--sun-yellow);
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+  color: #4CAF50;
+  font-size: 3rem;
+  text-shadow: 3px 3px 0 #2E7D32;
+  animation: celebratePulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes celebratePulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.05);
+  }
 }
 
 .lose-title {
-  color: var(--danger-red);
+  color: #9C27B0;
+  font-size: 3rem;
+  text-shadow: 3px 3px 0 #6A1B9A;
+}
+
+.menu-content p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 1rem 0 2rem;
+  font-size: 1.2rem;
+}
+
+.menu-content h2 {
+  color: white;
   font-size: 2.5rem;
-  margin-bottom: 16px;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Loading Screen */
-#loading-screen {
-  background: var(--bg-dark);
-}
-
+/* ===============================================
+   LOADING SCREEN
+   =============================================== */
 .loading-content {
   text-align: center;
+  color: white;
 }
 
 .loading-spinner {
   width: 60px;
   height: 60px;
-  border: 4px solid var(--glass-border);
-  border-top-color: var(--primary-green);
+  margin: 0 auto 1rem;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #4CAF50;
   border-radius: 50%;
-  margin: 0 auto 20px;
   animation: spin 1s linear infinite;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.loading-content p {
+  font-size: 1.5rem;
+  animation: loadingPulse 1.5s ease-in-out infinite;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+@keyframes loadingPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* Floating Sun Animation */
-.floating-sun {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  background: radial-gradient(circle, var(--sun-yellow), var(--sun-orange));
-  border-radius: 50%;
-  box-shadow: 0 0 30px var(--sun-yellow);
-  cursor: pointer;
-  animation: bounce 2s ease-in-out infinite;
-  z-index: 50;
-  pointer-events: auto;
-}
-
-.floating-sun:hover {
-  transform: scale(1.2);
-}
-
-/* Tooltips */
-.tooltip {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  pointer-events: none;
-  z-index: 200;
-  white-space: nowrap;
-}
-
-/* Responsive Design */
+/* ===============================================
+   RESPONSIVE
+   =============================================== */
 @media (max-width: 768px) {
   .game-title {
     font-size: 2.5rem;
   }
-  
+
   .menu-content {
-    padding: 32px;
-    margin: 20px;
+    padding: 1.5rem;
+    margin: 1rem;
   }
-  
+
+  .menu-btn {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+  }
+
   #plant-bar {
-    position: absolute;
-    bottom: 20px;
-    top: auto;
-    gap: 8px;
-    padding: 8px;
+    gap: 0.4rem;
+    padding: 0.5rem;
   }
-  
-  .plant-slot {
-    width: 60px;
-    height: 80px;
+
+  .plant-card {
+    width: 80px;
+    padding: 0.4rem;
   }
-  
-  .plant-icon {
-    width: 35px;
-    height: 35px;
+
+  .plant-image {
+    width: 45px;
+    height: 45px;
   }
+
+  .plant-name {
+    font-size: 0.6rem;
+  }
+
+  .plant-desc {
+    display: none;
+  }
+
+  .hotkey {
+    display: none;
+  }
+}
+
+/* ===============================================
+   ANIMATIONS
+   =============================================== */
+@keyframes pop {
+  0% {
+    transform: scale(0);
+  }
+
+  70% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+  }
+}
+
+.sun-collected {
+  animation: pop 0.3s ease-out;
+}
+
+.insufficient-sun {
+  animation: shake 0.3s ease-in-out;
+}
+
+.plant-ready {
+  animation: glow 1s ease-in-out infinite;
 }

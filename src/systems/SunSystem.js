@@ -190,7 +190,8 @@ export class SunSystem {
             const dz = worldPos.z - transform.z;
             const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-            if (dist < 1) {
+            // Larger collection radius for easier clicking
+            if (dist < 1.8) {
                 this.collectSun(sun);
                 return true;
             }

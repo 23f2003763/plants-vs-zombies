@@ -546,40 +546,56 @@ export class ModelGenerator {
     createSun() {
         const group = new THREE.Group();
 
-        // Main sun body
-        const sunGeom = new THREE.SphereGeometry(0.25, 12, 8);
-        const sunMat = new THREE.MeshStandardMaterial({
-            color: 0xFFD700,
-            emissive: 0xFFA500,
-            emissiveIntensity: 0.8,
-            roughness: 0.3
+        // Outer glow sphere
+        const glowGeom = new THREE.SphereGeometry(0.5, 16, 12);
+        const glowMat = new THREE.MeshBasicMaterial({
+            color: 0xFFEB3B,
+            transparent: true,
+            opacity: 0.4
+        });
+        const glow = new THREE.Mesh(glowGeom, glowMat);
+        group.add(glow);
+
+        // Main sun body - bigger
+        const sunGeom = new THREE.SphereGeometry(0.35, 16, 12);
+        const sunMat = new THREE.MeshBasicMaterial({
+            color: 0xFFD700
         });
         const sun = new THREE.Mesh(sunGeom, sunMat);
         group.add(sun);
 
-        // Sun rays
-        const rayGeom = new THREE.ConeGeometry(0.08, 0.2, 4);
-        const rayMat = new THREE.MeshStandardMaterial({
-            color: 0xFFD700,
-            emissive: 0xFFA500,
-            emissiveIntensity: 0.5
+        // Inner bright core
+        const coreGeom = new THREE.SphereGeometry(0.2, 12, 8);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0xFFFFAA
+        });
+        const core = new THREE.Mesh(coreGeom, coreMat);
+        group.add(core);
+
+        // Sun rays - bigger and more prominent
+        const rayGeom = new THREE.ConeGeometry(0.12, 0.3, 4);
+        const rayMat = new THREE.MeshBasicMaterial({
+            color: 0xFFD700
         });
 
         for (let i = 0; i < 8; i++) {
             const ray = new THREE.Mesh(rayGeom, rayMat);
             const angle = (i / 8) * Math.PI * 2;
             ray.position.set(
-                Math.cos(angle) * 0.3,
-                Math.sin(angle) * 0.3,
+                Math.cos(angle) * 0.45,
+                Math.sin(angle) * 0.45,
                 0
             );
             ray.rotation.z = angle - Math.PI / 2;
             group.add(ray);
         }
 
-        // Point light for glow
-        const light = new THREE.PointLight(0xFFD700, 0.5, 2);
+        // Point light for extra glow
+        const light = new THREE.PointLight(0xFFD700, 1, 3);
         group.add(light);
+
+        // Mark for easy identification
+        group.userData.isSun = true;
 
         return group;
     }

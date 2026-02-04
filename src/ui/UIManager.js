@@ -24,6 +24,7 @@ export class UIManager {
             plantBar: document.getElementById('plant-bar'),
             waveText: document.getElementById('wave-text'),
             waveProgressFill: document.getElementById('wave-progress-fill'),
+            zombiesRemaining: document.getElementById('zombies-remaining'),
             pauseBtn: document.getElementById('pause-btn'),
 
             // Buttons
@@ -198,7 +199,7 @@ export class UIManager {
         const slot = document.querySelector(`[data-plant="${plantType}"]`);
         if (!slot) return;
 
-        slot.classList.add('disabled');
+        slot.classList.add('disabled', 'on-cooldown');
         const overlay = slot.querySelector('.cooldown-overlay');
 
         if (overlay) {
@@ -219,7 +220,7 @@ export class UIManager {
             }
 
             if (progress >= 1) {
-                data.slot.classList.remove('disabled');
+                data.slot.classList.remove('disabled', 'on-cooldown');
                 this.cooldowns.delete(plantType);
             }
         }
@@ -255,13 +256,21 @@ export class UIManager {
         });
     }
 
-    updateWaveDisplay(waveNumber, progress) {
+    updateWaveDisplay(waveNumber, progress, zombiesRemaining = 0) {
         if (this.elements.waveText) {
             this.elements.waveText.textContent = `Wave ${waveNumber}`;
         }
 
         if (this.elements.waveProgressFill) {
             this.elements.waveProgressFill.style.width = `${progress * 100}%`;
+        }
+
+        if (this.elements.zombiesRemaining) {
+            if (zombiesRemaining > 0) {
+                this.elements.zombiesRemaining.textContent = `🧟 ${zombiesRemaining} zombies`;
+            } else {
+                this.elements.zombiesRemaining.textContent = '';
+            }
         }
     }
 
@@ -314,7 +323,7 @@ export class UIManager {
 
         // Reset cooldown overlays
         this.plantSlots.forEach(slot => {
-            slot.classList.remove('disabled');
+            slot.classList.remove('disabled', 'on-cooldown');
             const overlay = slot.querySelector('.cooldown-overlay');
             if (overlay) {
                 overlay.style.height = '0%';
