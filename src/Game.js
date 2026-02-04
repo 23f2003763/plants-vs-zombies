@@ -602,7 +602,7 @@ export class Game {
     startLevel(levelIndex) {
         const levelConfig = GAME_CONFIG.LEVELS.find(l => l.id === levelIndex);
         if (!levelConfig) {
-            console.log("Level not found");
+            console.error(`Level not found: ${levelIndex}`);
             return;
         }
 
@@ -611,7 +611,11 @@ export class Game {
 
         // Update Weather
         if (this.weatherSystem) {
-            this.weatherSystem.setWeather(levelConfig.weather);
+            try {
+                this.weatherSystem.setWeather(levelConfig.weather);
+            } catch (e) {
+                console.error("Weather Error:", e);
+            }
         }
 
         // Update Waves
@@ -619,11 +623,14 @@ export class Game {
             this.waveManager.setConfig(levelConfig.waves);
             // Start first wave immediately or after short delay
             setTimeout(() => {
+                console.log(`Checking start condition for Level ${levelIndex} Wave 1`);
                 if (this.state === GAME_STATES.PLAYING) {
-                    this.waveManager.startWave();
+                    this.waveManager.startWave(1);
                     if (this.uiManager && this.uiManager.updateWaveDisplay) {
-                        this.uiManager.updateWaveDisplay(1, 0);
+                        this.uiManager.updateWaveDisplay(1, 0, 0);
                     }
+                } else {
+                    console.warn("Game not playing, skipping wave start");
                 }
             }, 2000);
         }
@@ -647,13 +654,8 @@ export class Game {
         // Update sun display
         this.uiManager.updateSunDisplay(this.sunSystem.getSunAmount());
 
-        // Start first wave after delay
-        setTimeout(() => {
-            if (this.state === GAME_STATES.PLAYING) {
-                this.waveManager.startWave(1);
-                this.uiManager.updateWaveDisplay(1, 0);
-            }
-        }, 3000);
+        // Start Level 1
+        this.startLevel(1);
 
         // Start music
         this.audioManager.playMusic();
@@ -723,7 +725,6 @@ export class Game {
         if (this.plantSystem) this.plantSystem.update(deltaTime);
         if (this.weatherSystem) this.weatherSystem.update(deltaTime);
 
-        // Check Wave Completion & Transition
         // Check Wave Completion & Transition
         if (this.waveManager.isWaveComplete()) {
             // Start transition if not already
