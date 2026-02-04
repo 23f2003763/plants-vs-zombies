@@ -105,6 +105,14 @@ export class Game {
                 this.audioManager
             );
 
+            // Wire up zombie kill reward
+            this.combatSystem.onZombieKill = (amount) => {
+                if (this.sunSystem) {
+                    this.sunSystem.addSun(amount);
+                    // Also show floating text if possible (optional improvement for later)
+                }
+            };
+
             // Initialize zombie AI
             this.zombieAI = new ZombieAI(
                 this.world,

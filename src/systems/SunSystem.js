@@ -200,8 +200,15 @@ export class SunSystem {
         return false;
     }
 
-    collectSun(sun) {
-        const collectable = sun.getComponent('Collectable');
+    addSun(amount) {
+        this.sunAmount += amount;
+        if (this.onSunChange) {
+            this.onSunChange(this.sunAmount);
+        }
+    }
+
+    collectSun(sunEntity) {
+        const collectable = sunEntity.getComponent('Collectable');
         if (collectable.collected) return;
 
         collectable.collected = true;

@@ -123,57 +123,59 @@ export const GAME_CONFIG = {
         }
     },
 
-    // Wave Settings - SLOWER spawns, more time between waves
+    // Wave Settings - INTENSE ACTION
     WAVES: [
         {
             number: 1,
             zombies: [
-                { type: 'basic', count: 2, interval: 12000 }  // Only 2 zombies, 12s apart
+                { type: 'basic', count: 5, interval: 4000 }  // 5 zombies, 4s apart (Fast start)
             ],
-            delay: 8000  // 8 second delay before wave starts
+            delay: 5000
         },
         {
             number: 2,
             zombies: [
-                { type: 'basic', count: 4, interval: 10000 },
-                { type: 'cone', count: 1, interval: 15000 }
+                { type: 'basic', count: 8, interval: 3500 },
+                { type: 'cone', count: 3, interval: 8000 }
             ],
-            delay: 6000
+            delay: 5000
         },
         {
             number: 3,
             zombies: [
-                { type: 'basic', count: 5, interval: 8000 },
-                { type: 'cone', count: 2, interval: 12000 }
+                { type: 'basic', count: 12, interval: 3000 },
+                { type: 'cone', count: 5, interval: 6000 },
+                { type: 'bucket', count: 2, interval: 15000 }
             ],
             delay: 5000
         },
         {
             number: 4,
             zombies: [
-                { type: 'basic', count: 6, interval: 6000 },
-                { type: 'cone', count: 3, interval: 10000 },
-                { type: 'bucket', count: 1, interval: 20000 }
+                { type: 'basic', count: 15, interval: 2500 },
+                { type: 'cone', count: 8, interval: 5000 },
+                { type: 'bucket', count: 4, interval: 10000 },
+                { type: 'flag', count: 1, interval: 20000 }
             ],
             delay: 4000
         },
         {
             number: 5,
             zombies: [
-                { type: 'basic', count: 8, interval: 5000 },
-                { type: 'cone', count: 4, interval: 8000 },
-                { type: 'bucket', count: 2, interval: 15000 },
-                { type: 'flag', count: 1, interval: 25000 }
+                { type: 'basic', count: 20, interval: 2000 },
+                { type: 'cone', count: 10, interval: 4000 },
+                { type: 'bucket', count: 6, interval: 8000 },
+                { type: 'flag', count: 3, interval: 15000 }
             ],
-            delay: 3000
+            delay: 4000
         }
     ],
 
-    // Projectile Settings - BIG visible peas
+    // Projectile Settings
     PROJECTILE: {
         SPEED: 15,
-        SIZE: 0.25,  // Much bigger for visibility
-        COLOR: 0x00FF00  // Bright green
+        SIZE: 0.15,  // Normal size
+        COLOR: 0x44FF44  // Bright green
     },
 
     // Audio Settings

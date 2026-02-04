@@ -13,9 +13,12 @@ export class CombatSystem {
         this.animationSystem = animationSystem;
         this.audioManager = audioManager;
 
+        // Callback for zombie kills
+        this.onZombieKill = null;
+
         // Object pools
         this.projectilePool = [];
-        this.maxProjectiles = 50;
+        this.maxProjectiles = 200;  // Large pool for machine gun fire
 
         // Pre-create projectile pool
         this.initializePool();
@@ -230,17 +233,42 @@ export class CombatSystem {
         const health = zombie.getComponent('Health');
         health.current -= damage;
 
-        // Visual feedback - flash red
-        if (zombie.mesh) {
+        // Visual feedback - flash red (only if not already flashing)
+        if (zombie.mesh && !zombie.mesh.userData.isFlashing) {
+            zombie.mesh.userData.isFlashing = true;
+
+            // Store original colors if not already stored
+            if (!zombie.mesh.userData.originalColors) {
+                zombie.mesh.userData.originalColors = new Map();
+                zombie.mesh.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        // Clone material to avoid affecting other zombies
+                        child.material = child.material.clone();
+                        zombie.mesh.userData.originalColors.set(child.uuid, child.material.color.getHex());
+                    }
+                });
+            }
+
+            // Flash red
             zombie.mesh.traverse((child) => {
                 if (child.isMesh && child.material) {
-                    const originalColor = child.material.color.getHex();
                     child.material.color.setHex(0xFF0000);
-                    setTimeout(() => {
-                        child.material.color.setHex(originalColor);
-                    }, 100);
                 }
             });
+
+            // Restore original colors after 80ms
+            setTimeout(() => {
+                if (zombie.mesh && zombie.mesh.userData.originalColors) {
+                    zombie.mesh.traverse((child) => {
+                        if (child.isMesh && child.material && zombie.mesh.userData.originalColors.has(child.uuid)) {
+                            child.material.color.setHex(zombie.mesh.userData.originalColors.get(child.uuid));
+                        }
+                    });
+                }
+                if (zombie.mesh) {
+                    zombie.mesh.userData.isFlashing = false;
+                }
+            }, 80);
         }
 
         // Check death
@@ -253,6 +281,11 @@ export class CombatSystem {
         const zombieData = zombie.getComponent('Zombie');
         const transform = zombie.getComponent('Transform');
         zombieData.state = 'die';
+
+        // Award 100 sun for killing zombie
+        if (this.onZombieKill) {
+            this.onZombieKill(100);
+        }
 
         // Play death sound
         if (this.audioManager) {
