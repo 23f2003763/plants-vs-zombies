@@ -47,7 +47,7 @@ export const GAME_CONFIG = {
             health: 300,
             cooldown: 3000,  // 3 second cooldown
             fireRate: 200,   // MACHINE GUN: 5 shots per second!
-            damage: 15,      // Reduced damage (was 25)
+            damage: 15,
             color: 0x4CAF50
         },
         SUNFLOWER: {
@@ -56,7 +56,7 @@ export const GAME_CONFIG = {
             description: 'Produces sun for planting',
             cost: 50,
             health: 300,
-            cooldown: 3000,  // 3 second cooldown
+            cooldown: 5000,  // 5 second cooldown
             sunInterval: 10000,
             sunValue: 50,
             color: 0xFFD700
@@ -67,7 +67,7 @@ export const GAME_CONFIG = {
             description: 'Blocks zombies with tough shell',
             cost: 50,
             health: 4000,
-            cooldown: 5000,  // 5 second cooldown
+            cooldown: 10000, // 10 second cooldown
             color: 0x8B4513
         },
         CHERRYBOMB: {
@@ -83,13 +83,13 @@ export const GAME_CONFIG = {
         }
     },
 
-    // Zombie Types - Slower for early game
+    // Zombie Types - FASTER and MORE DANGEROUS
     ZOMBIES: {
         BASIC: {
             id: 'basic',
             name: 'Zombie',
-            health: 200,  // Easier to kill
-            speed: 0.5,   // SLOWER
+            health: 200,
+            speed: 0.8,   // Increased speed (was 0.5)
             damage: 80,
             attackSpeed: 600,
             color: 0x98FB98
@@ -98,7 +98,7 @@ export const GAME_CONFIG = {
             id: 'cone',
             name: 'Conehead',
             health: 450,
-            speed: 0.5,
+            speed: 0.7,   // Faster
             damage: 80,
             attackSpeed: 600,
             color: 0x98FB98
@@ -107,7 +107,7 @@ export const GAME_CONFIG = {
             id: 'bucket',
             name: 'Buckethead',
             health: 900,
-            speed: 0.4,
+            speed: 0.6,   // Faster
             damage: 80,
             attackSpeed: 600,
             color: 0x98FB98
@@ -116,58 +116,59 @@ export const GAME_CONFIG = {
             id: 'flag',
             name: 'Flag Zombie',
             health: 200,
-            speed: 0.8,
+            speed: 1.2,   // Very fast
             damage: 80,
             attackSpeed: 600,
             color: 0x98FB98
         }
     },
 
-    // Wave Settings - INTENSE ACTION
+    // Wave Settings - EXTREME ACTION
+    // More zombies, less delay
     WAVES: [
         {
             number: 1,
             zombies: [
-                { type: 'basic', count: 5, interval: 4000 }  // 5 zombies, 4s apart (Fast start)
+                { type: 'basic', count: 8, interval: 3000 }  // 8 zombies!
             ],
-            delay: 5000
+            delay: 4000
         },
         {
             number: 2,
             zombies: [
-                { type: 'basic', count: 8, interval: 3500 },
-                { type: 'cone', count: 3, interval: 8000 }
+                { type: 'basic', count: 12, interval: 2500 },
+                { type: 'cone', count: 5, interval: 6000 }
             ],
-            delay: 5000
+            delay: 4000
         },
         {
             number: 3,
             zombies: [
-                { type: 'basic', count: 12, interval: 3000 },
-                { type: 'cone', count: 5, interval: 6000 },
-                { type: 'bucket', count: 2, interval: 15000 }
+                { type: 'basic', count: 15, interval: 2000 },
+                { type: 'cone', count: 8, interval: 5000 },
+                { type: 'bucket', count: 3, interval: 12000 }
             ],
-            delay: 5000
+            delay: 4000
         },
         {
             number: 4,
             zombies: [
-                { type: 'basic', count: 15, interval: 2500 },
-                { type: 'cone', count: 8, interval: 5000 },
-                { type: 'bucket', count: 4, interval: 10000 },
-                { type: 'flag', count: 1, interval: 20000 }
+                { type: 'basic', count: 20, interval: 1500 },
+                { type: 'cone', count: 12, interval: 4000 },
+                { type: 'bucket', count: 6, interval: 8000 },
+                { type: 'flag', count: 2, interval: 15000 }
             ],
-            delay: 4000
+            delay: 3000
         },
         {
             number: 5,
             zombies: [
-                { type: 'basic', count: 20, interval: 2000 },
-                { type: 'cone', count: 10, interval: 4000 },
-                { type: 'bucket', count: 6, interval: 8000 },
-                { type: 'flag', count: 3, interval: 15000 }
+                { type: 'basic', count: 30, interval: 1000 },
+                { type: 'cone', count: 15, interval: 3000 },
+                { type: 'bucket', count: 10, interval: 6000 },
+                { type: 'flag', count: 4, interval: 12000 }
             ],
-            delay: 4000
+            delay: 3000
         }
     ],
 

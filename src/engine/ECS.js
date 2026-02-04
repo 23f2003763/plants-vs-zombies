@@ -93,6 +93,8 @@ export class World {
             if (entity.mesh) {
                 scene.remove(entity.mesh);
                 if (entity.mesh.geometry) entity.mesh.geometry.dispose();
+                // Do NOT dispose materials as they are shared/cached by ModelGenerator
+                /*
                 if (entity.mesh.material) {
                     if (Array.isArray(entity.mesh.material)) {
                         entity.mesh.material.forEach(m => m.dispose());
@@ -100,6 +102,7 @@ export class World {
                         entity.mesh.material.dispose();
                     }
                 }
+                */
             }
             this.entities.delete(entity.id);
         }
@@ -152,6 +155,9 @@ export class World {
             if (entity.mesh) {
                 scene.remove(entity.mesh);
                 if (entity.mesh.geometry) entity.mesh.geometry.dispose();
+                if (entity.mesh.geometry) entity.mesh.geometry.dispose();
+                // Do NOT dispose materials as they are shared/cached
+                /*
                 if (entity.mesh.material) {
                     if (Array.isArray(entity.mesh.material)) {
                         entity.mesh.material.forEach(m => m.dispose());
@@ -159,6 +165,7 @@ export class World {
                         entity.mesh.material.dispose();
                     }
                 }
+                */
             }
         }
         this.entities.clear();
