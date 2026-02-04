@@ -216,19 +216,25 @@ export class SunSystem {
         // Add sun
         this.addSun(collectable.value);
 
+        // Play sound
+        if (this.world && this.world.systems) {
+            // Try to find audio manager if not directly available (optional safety)
+        }
+
         // Animate collection
-        if (this.animationSystem && sun.mesh) {
-            this.animationSystem.animateSunCollect(sun.mesh, this.collectTarget, () => {
-                this.removeSun(sun);
+        if (this.animationSystem && sunEntity.mesh) {
+            this.animationSystem.animateSunCollect(sunEntity.mesh, this.collectTarget, () => {
+                this.removeSun(sunEntity);
             });
         } else {
-            this.removeSun(sun);
+            this.removeSun(sunEntity);
         }
     }
 
     removeSun(sun) {
         if (sun.mesh) {
             this.returnSunToPool(sun.mesh);
+            sun.mesh = null; // Important: prevent World from removing pooled mesh from scene
         }
         sun.destroy();
         this.world.removeEntity(sun);

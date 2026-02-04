@@ -479,7 +479,10 @@ export class CombatSystem {
     }
 
     removeProjectile(projectile) {
-        this.returnProjectileToPool(projectile.mesh);
+        if (projectile.mesh) {
+            this.returnProjectileToPool(projectile.mesh);
+            projectile.mesh = null; // Important: prevent World from removing pooled mesh from scene
+        }
         projectile.destroy();
         this.world.removeEntity(projectile);
     }
