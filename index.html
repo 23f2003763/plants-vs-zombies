@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plants vs Zombies 3D - A Roblox-style tower defense game">
+  <title>Plants vs Zombies 3D</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Game Canvas Container -->
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <!-- UI Overlay -->
+  <div id="ui-overlay">
+    <!-- Main Menu -->
+    <div id="main-menu" class="menu-screen">
+      <div class="menu-content">
+        <h1 class="game-title">
+          <span class="title-plants">Plants</span>
+          <span class="title-vs">vs</span>
+          <span class="title-zombies">Zombies</span>
+          <span class="title-3d">3D</span>
+        </h1>
+        <div class="menu-buttons">
+          <button id="play-btn" class="menu-btn primary">Play Game</button>
+          <button id="settings-btn" class="menu-btn">Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" class="menu-screen hidden">
+      <div class="menu-content">
+        <h2>Settings</h2>
+        <div class="settings-group">
+          <label>Master Volume</label>
+          <input type="range" id="master-volume" min="0" max="100" value="70">
+        </div>
+        <div class="settings-group">
+          <label>Music Volume</label>
+          <input type="range" id="music-volume" min="0" max="100" value="50">
+        </div>
+        <div class="settings-group">
+          <label>SFX Volume</label>
+          <input type="range" id="sfx-volume" min="0" max="100" value="80">
+        </div>
+        <button id="settings-back-btn" class="menu-btn">Back</button>
+      </div>
+    </div>
+
+    <!-- Game HUD -->
+    <div id="game-hud" class="hidden">
+      <!-- Sun Counter -->
+      <div id="sun-counter">
+        <div class="sun-icon"></div>
+        <span id="sun-amount">50</span>
+      </div>
+
+      <!-- Plant Selection Bar -->
+      <div id="plant-bar">
+        <div class="plant-slot" data-plant="peashooter" data-cost="100">
+          <div class="plant-icon peashooter-icon"></div>
+          <span class="plant-cost">100</span>
+          <div class="cooldown-overlay"></div>
+        </div>
+        <div class="plant-slot" data-plant="sunflower" data-cost="50">
+          <div class="plant-icon sunflower-icon"></div>
+          <span class="plant-cost">50</span>
+          <div class="cooldown-overlay"></div>
+        </div>
+        <div class="plant-slot" data-plant="wallnut" data-cost="50">
+          <div class="plant-icon wallnut-icon"></div>
+          <span class="plant-cost">50</span>
+          <div class="cooldown-overlay"></div>
+        </div>
+        <div class="plant-slot" data-plant="cherrybomb" data-cost="150">
+          <div class="plant-icon cherrybomb-icon"></div>
+          <span class="plant-cost">150</span>
+          <div class="cooldown-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Wave Progress -->
+      <div id="wave-info">
+        <span id="wave-text">Wave 1</span>
+        <div id="wave-progress-bar">
+          <div id="wave-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Pause Button -->
+      <button id="pause-btn">⏸</button>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="menu-screen hidden">
+      <div class="menu-content">
+        <h2>Paused</h2>
+        <button id="resume-btn" class="menu-btn primary">Resume</button>
+        <button id="restart-btn" class="menu-btn">Restart</button>
+        <button id="quit-btn" class="menu-btn">Quit to Menu</button>
+      </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="win-screen" class="menu-screen hidden">
+      <div class="menu-content">
+        <h2 class="win-title">🎉 Victory! 🎉</h2>
+        <p>You defended the lawn!</p>
+        <button id="win-restart-btn" class="menu-btn primary">Play Again</button>
+        <button id="win-menu-btn" class="menu-btn">Main Menu</button>
+      </div>
+    </div>
+
+    <!-- Lose Screen -->
+    <div id="lose-screen" class="menu-screen hidden">
+      <div class="menu-content">
+        <h2 class="lose-title">☠️ Zombies Won! ☠️</h2>
+        <p>The zombies ate your brains!</p>
+        <button id="lose-restart-btn" class="menu-btn primary">Try Again</button>
+        <button id="lose-menu-btn" class="menu-btn">Main Menu</button>
+      </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="menu-screen">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
