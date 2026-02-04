@@ -245,5 +245,15 @@ export const Components = {
         type: animationType,
         speed: speed,
         time: 0
+    }),
+
+    Lifetime: (duration) => ({
+        total: duration,
+        remaining: duration
+    }),
+
+    // UI Components
+    TimerRing: (mesh) => ({
+        mesh: mesh
     })
 };

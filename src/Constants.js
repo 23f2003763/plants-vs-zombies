@@ -48,6 +48,7 @@ export const GAME_CONFIG = {
             cooldown: 3000,  // 3 second cooldown
             fireRate: 200,   // MACHINE GUN: 5 shots per second!
             damage: 15,
+            lifetime: 10000, // 10 seconds lifetime
             color: 0x4CAF50
         },
         SUNFLOWER: {
@@ -59,6 +60,7 @@ export const GAME_CONFIG = {
             cooldown: 5000,  // 5 second cooldown
             sunInterval: 10000,
             sunValue: 50,
+            lifetime: 10000, // 10 seconds lifetime
             color: 0xFFD700
         },
         WALLNUT: {
@@ -68,6 +70,7 @@ export const GAME_CONFIG = {
             cost: 50,
             health: 4000,
             cooldown: 10000, // 10 second cooldown
+            lifetime: 10000, // 10 seconds lifetime
             color: 0x8B4513
         },
         CHERRYBOMB: {
@@ -123,54 +126,48 @@ export const GAME_CONFIG = {
         }
     },
 
-    // Wave Settings - EXTREME ACTION
-    // More zombies, less delay
-    WAVES: [
+    // Level Configuration
+    LEVELS: [
         {
-            number: 1,
-            zombies: [
-                { type: 'basic', count: 8, interval: 3000 }  // 8 zombies!
-            ],
-            delay: 4000
+            id: 1,
+            name: "Day",
+            weather: 'sunny',
+            waves: [
+                { number: 1, zombies: [{ type: 'basic', count: 5, interval: 4000 }], delay: 5000 },
+                { number: 2, zombies: [{ type: 'basic', count: 8, interval: 3500 }, { type: 'cone', count: 3, interval: 8000 }], delay: 5000 }
+            ]
         },
         {
-            number: 2,
-            zombies: [
-                { type: 'basic', count: 12, interval: 2500 },
-                { type: 'cone', count: 5, interval: 6000 }
-            ],
-            delay: 4000
+            id: 2,
+            name: "Night",
+            weather: 'night',
+            waves: [
+                { number: 1, zombies: [{ type: 'basic', count: 12, interval: 3000 }, { type: 'cone', count: 5, interval: 6000 }], delay: 5000 },
+                { number: 2, zombies: [{ type: 'basic', count: 15, interval: 2500 }, { type: 'bucket', count: 3, interval: 12000 }], delay: 4000 }
+            ]
         },
         {
-            number: 3,
-            zombies: [
-                { type: 'basic', count: 15, interval: 2000 },
-                { type: 'cone', count: 8, interval: 5000 },
-                { type: 'bucket', count: 3, interval: 12000 }
-            ],
-            delay: 4000
+            id: 3,
+            name: "Rain",
+            weather: 'rain',
+            waves: [
+                { number: 1, zombies: [{ type: 'basic', count: 20, interval: 2000 }, { type: 'cone', count: 8, interval: 5000 }], delay: 4000 },
+                { number: 2, zombies: [{ type: 'basic', count: 30, interval: 1000 }, { type: 'flag', count: 2, interval: 15000 }], delay: 3000 }
+            ]
         },
         {
-            number: 4,
-            zombies: [
-                { type: 'basic', count: 20, interval: 1500 },
-                { type: 'cone', count: 12, interval: 4000 },
-                { type: 'bucket', count: 6, interval: 8000 },
-                { type: 'flag', count: 2, interval: 15000 }
-            ],
-            delay: 3000
-        },
-        {
-            number: 5,
-            zombies: [
-                { type: 'basic', count: 30, interval: 1000 },
-                { type: 'cone', count: 15, interval: 3000 },
-                { type: 'bucket', count: 10, interval: 6000 },
-                { type: 'flag', count: 4, interval: 12000 }
-            ],
-            delay: 3000
+            id: 4,
+            name: "Snow",
+            weather: 'snow',
+            waves: [
+                { number: 1, zombies: [{ type: 'basic', count: 25, interval: 1500 }, { type: 'bucket', count: 6, interval: 8000 }], delay: 3000 },
+                { number: 2, zombies: [{ type: 'basic', count: 40, interval: 800 }, { type: 'flag', count: 4, interval: 12000 }], delay: 3000 }
+            ]
         }
     ],
+
+    // Legacy Wave Settings (kept for compatibility, but overwritten by Levels)
+    WAVES: [],
 
     // Projectile Settings
     PROJECTILE: {

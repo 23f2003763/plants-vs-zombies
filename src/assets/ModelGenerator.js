@@ -655,6 +655,56 @@ export class ModelGenerator {
         return group;
     }
 
+    createTimerRing() {
+        // Simple ring geometry that will be masked by shader
+        const geometry = new THREE.PlaneGeometry(1, 1);
+
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uProgress: { value: 1.0 },
+                uColor: { value: new THREE.Color(0xFFFFFF) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uProgress;
+                uniform vec3 uColor;
+                varying vec2 vUv;
+                
+                #define PI 3.14159265359
+                
+                void main() {
+                    vec2 center = vec2(0.5, 0.5);
+                    vec2 diff = vUv - center;
+                    float dist = length(diff);
+                    
+                    // Ring shape (thickness)
+                    if (dist < 0.35 || dist > 0.45) discard;
+                    
+                    // Angle calculation for progress
+                    float angle = atan(-diff.x, diff.y); // -PI to PI
+                    if (angle < 0.0) angle += 2.0 * PI; // 0 to 2PI
+                    
+                    if (angle > uProgress * 2.0 * PI) discard;
+                    
+                    gl_FragColor = vec4(uColor, 0.8);
+                }
+            `,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.x = -Math.PI / 2; // Flat on ground
+        mesh.renderOrder = 999; // Render on top
+        return mesh;
+    }
+
     dispose() {
         for (const material of this.materials.values()) {
             material.dispose();

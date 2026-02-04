@@ -14,8 +14,9 @@ export class WaveManager {
 
         // Wave state
         this.currentWave = 0;
-        this.waveStartTime = 0;
+        this.currentWaveTime = 0; // Renamed from waveStartTime
         this.waveActive = false;
+        this.waveComplete = false; // New state
         this.spawnTimers = [];
         this.zombiesSpawned = 0;
         this.totalZombiesInWave = 0;
@@ -24,6 +25,21 @@ export class WaveManager {
         // Spawn position (right side of grid)
         this.spawnX = GAME_CONFIG.GRID.OFFSET_X +
             GAME_CONFIG.GRID.COLS * GAME_CONFIG.GRID.CELL_SIZE + 2;
+
+        // Default to config waves
+        this.waves = GAME_CONFIG.WAVES || [];
+    }
+
+    setConfig(waves) {
+        this.waves = waves;
+        this.currentWave = 0;
+        this.allWavesComplete = false;
+        //// this.resetWaveState(); // resetWaveState isn't defined? I should define it or just reset vars manually.
+        // Manual reset
+        this.currentWaveTime = 0;
+        this.zombiesSpawned = 0;
+        this.waveActive = false;
+        this.waveComplete = false;
     }
 
     startWave(waveNumber = null) {
@@ -33,12 +49,12 @@ export class WaveManager {
             this.currentWave++;
         }
 
-        if (this.currentWave > GAME_CONFIG.WAVES.length) {
+        if (this.currentWave > this.waves.length) {
             this.allWavesComplete = true;
             return false;
         }
 
-        const waveData = GAME_CONFIG.WAVES[this.currentWave - 1];
+        const waveData = this.waves[this.currentWave - 1];
         this.waveActive = true;
         this.waveStartTime = performance.now();
         this.zombiesSpawned = 0;

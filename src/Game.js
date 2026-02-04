@@ -16,6 +16,8 @@ import { ZombieAI } from './systems/ZombieAI.js';
 import { WaveManager } from './systems/WaveManager.js';
 import { SunSystem } from './systems/SunSystem.js';
 import { UIManager } from './ui/UIManager.js';
+import { PlantSystem } from './systems/PlantSystem.js';
+import { WeatherSystem } from './systems/WeatherSystem.js';
 import { AudioManager } from './audio/AudioManager.js';
 
 export class Game {
@@ -40,6 +42,8 @@ export class Game {
         this.zombieAI = null;
         this.waveManager = null;
         this.sunSystem = null;
+        this.plantSystem = null;
+        this.weatherSystem = null;
 
         // UI & Audio
         this.uiManager = null;
@@ -120,6 +124,19 @@ export class Game {
                 this.combatSystem
             );
 
+            // Plant System
+            this.plantSystem = new PlantSystem(
+                this.world,
+                this.gridSystem,
+                this.modelGenerator
+            );
+
+            // Weather System
+            this.weatherSystem = new WeatherSystem(
+                this.renderer.getScene(),
+                null // Light system not separated yet
+            );
+
             // Initialize wave manager
             this.waveManager = new WaveManager(
                 this.world,
@@ -127,6 +144,12 @@ export class Game {
                 this.modelGenerator,
                 this.gridSystem
             );
+
+            // Level State
+            this.currentLevel = 1;
+
+            // Start first level
+            this.startLevel(this.currentLevel);
 
             // Initialize sun system
             this.sunSystem = new SunSystem(
@@ -710,6 +733,13 @@ export class Game {
         // Update combat system
         this.combatSystem.update(deltaTime, elapsedTime, this.gridSystem);
 
+        // Update plant system (lifetime)
+        this.plantSystem.update(deltaTime);
+
+        // Update weather system
+        this.weatherSystem.update(deltaTime);
+
+
         // Update animations
         const allEntities = [...this.world.entities.values()];
         this.animationSystem.update(allEntities, deltaTime, elapsedTime);
@@ -719,11 +749,22 @@ export class Game {
             if (this.waveManager.hasMoreWaves()) {
                 // Start next wave after delay
                 setTimeout(() => {
-                    if (this.state === GAME_STATES.PLAYING) {
+                    if (this.state === GAME_STATES.PLAYING && !this.waveManager.waveActive) {
                         this.waveManager.startWave();
                         this.uiManager.updateWaveDisplay(this.waveManager.getCurrentWave(), 0);
                     }
                 }, 5000);
+            } else if (this.waveManager.allWavesComplete) {
+                // Level Complete!
+                // Proceed to next level if available
+                if (this.currentLevel < GAME_CONFIG.LEVELS.length) {
+                    this.currentLevel++;
+                    setTimeout(() => {
+                        this.startLevel(this.currentLevel);
+                    }, 5000); // 5s break between levels
+                } else {
+                    // Game Win handled in checkGameEnd
+                }
             }
         }
 
@@ -848,6 +889,22 @@ export class Game {
             ));
             entity.addComponent('Animation', Components.Animation('cherryBomb', 1));
         }
+
+        // Add Lifetime if configured
+        if (config.lifetime) {
+            entity.addComponent('Lifetime', Components.Lifetime(config.lifetime));
+
+            // Add timer ring
+            const timerMesh = this.modelGenerator.createTimerRing();
+            if (entity.mesh) {
+                // Position above plant
+                timerMesh.position.y = 1.0;
+                entity.mesh.add(timerMesh);
+
+                entity.addComponent('TimerRing', Components.TimerRing(timerMesh));
+            }
+        }
+
 
         // Create mesh
         let mesh;
