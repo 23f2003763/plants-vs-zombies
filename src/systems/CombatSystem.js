@@ -251,6 +251,7 @@ export class CombatSystem {
 
     killZombie(zombie) {
         const zombieData = zombie.getComponent('Zombie');
+        const transform = zombie.getComponent('Transform');
         zombieData.state = 'die';
 
         // Play death sound
@@ -258,16 +259,142 @@ export class CombatSystem {
             this.audioManager.playSound('zombieDeath');
         }
 
-        // Death animation
-        if (this.animationSystem && zombie.mesh) {
-            this.animationSystem.animateDeath(zombie.mesh, () => {
-                zombie.destroy();
-                this.world.removeEntity(zombie);
-            });
-        } else {
-            zombie.destroy();
-            this.world.removeEntity(zombie);
+        // Create blood explosion with body parts
+        if (zombie.mesh) {
+            this.createZombieDeathExplosion(zombie.mesh.position.clone());
         }
+
+        // Quick fade and remove
+        if (zombie.mesh) {
+            // Hide original zombie immediately
+            zombie.mesh.visible = false;
+        }
+
+        zombie.destroy();
+        this.world.removeEntity(zombie);
+    }
+
+    createZombieDeathExplosion(position) {
+        // Create multiple blood/body part particles
+        const particleCount = 15;
+        const particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            // Mix of blood splats and body parts
+            const isBodyPart = i < 5;
+            let geometry, material;
+
+            if (isBodyPart) {
+                // Body parts - boxes
+                geometry = new THREE.BoxGeometry(
+                    0.1 + Math.random() * 0.15,
+                    0.1 + Math.random() * 0.15,
+                    0.1 + Math.random() * 0.1
+                );
+                material = new THREE.MeshBasicMaterial({
+                    color: i < 2 ? 0x7CB342 : 0x5D4037 // Green skin or brown clothes
+                });
+            } else {
+                // Blood splats - small spheres
+                geometry = new THREE.SphereGeometry(0.05 + Math.random() * 0.08, 6, 4);
+                material = new THREE.MeshBasicMaterial({
+                    color: 0x8B0000 // Dark red blood
+                });
+            }
+
+            const particle = new THREE.Mesh(geometry, material);
+            particle.position.copy(position);
+            particle.position.y += 0.5 + Math.random() * 0.5;
+
+            // Random velocity
+            const velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 8,
+                3 + Math.random() * 5,
+                (Math.random() - 0.5) * 8
+            );
+
+            particle.userData.velocity = velocity;
+            particle.userData.rotationSpeed = new THREE.Vector3(
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10
+            );
+
+            this.scene.add(particle);
+            particles.push(particle);
+        }
+
+        // Create ground blood splatter
+        const bloodSplat = new THREE.Mesh(
+            new THREE.CircleGeometry(0.5 + Math.random() * 0.3, 8),
+            new THREE.MeshBasicMaterial({
+                color: 0x8B0000,
+                transparent: true,
+                opacity: 0.8
+            })
+        );
+        bloodSplat.rotation.x = -Math.PI / 2;
+        bloodSplat.position.copy(position);
+        bloodSplat.position.y = 0.02;
+        this.scene.add(bloodSplat);
+
+        // Animate particles
+        const gravity = -15;
+        const startTime = performance.now();
+        const duration = 1500; // 1.5 seconds
+
+        const animateParticles = () => {
+            const elapsed = performance.now() - startTime;
+            const dt = 0.016; // ~60fps
+
+            if (elapsed > duration) {
+                // Clean up
+                particles.forEach(p => {
+                    this.scene.remove(p);
+                    p.geometry.dispose();
+                    p.material.dispose();
+                });
+                // Fade blood splat
+                setTimeout(() => {
+                    this.scene.remove(bloodSplat);
+                    bloodSplat.geometry.dispose();
+                    bloodSplat.material.dispose();
+                }, 3000);
+                return;
+            }
+
+            particles.forEach(particle => {
+                // Apply gravity
+                particle.userData.velocity.y += gravity * dt;
+
+                // Move
+                particle.position.x += particle.userData.velocity.x * dt;
+                particle.position.y += particle.userData.velocity.y * dt;
+                particle.position.z += particle.userData.velocity.z * dt;
+
+                // Rotate
+                particle.rotation.x += particle.userData.rotationSpeed.x * dt;
+                particle.rotation.y += particle.userData.rotationSpeed.y * dt;
+                particle.rotation.z += particle.userData.rotationSpeed.z * dt;
+
+                // Bounce on ground
+                if (particle.position.y < 0.1) {
+                    particle.position.y = 0.1;
+                    particle.userData.velocity.y *= -0.3;
+                    particle.userData.velocity.x *= 0.7;
+                    particle.userData.velocity.z *= 0.7;
+                }
+
+                // Shrink over time
+                const progress = elapsed / duration;
+                const scale = 1 - progress * 0.5;
+                particle.scale.setScalar(scale);
+            });
+
+            requestAnimationFrame(animateParticles);
+        };
+
+        requestAnimationFrame(animateParticles);
     }
 
     damagePlant(plant, damage, gridSystem) {
