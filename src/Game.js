@@ -724,32 +724,44 @@ export class Game {
         if (this.weatherSystem) this.weatherSystem.update(deltaTime);
 
         // Check Wave Completion & Transition
-        if (this.waveManager.isWaveComplete() && !this.isWaveTransitioning) {
-            this.isWaveTransitioning = true;
-            console.log("Wave Complete! Starting next in 2s...");
+        // Check Wave Completion & Transition
+        if (this.waveManager.isWaveComplete()) {
+            // Start transition if not already
+            if (!this.isWaveTransitioning) {
+                this.isWaveTransitioning = true;
 
-            setTimeout(() => {
-                if (this.state === GAME_STATES.PLAYING) {
-                    // Check logic: Are there more waves in THIS level?
+                if (this.waveManager.hasMoreWaves()) {
+                    this.waveTransitionTimer = 1.0;
+                    if (this.uiManager.showMessage) this.uiManager.showMessage("Wave Complete!", 1000);
+                } else {
+                    this.waveTransitionTimer = 3.0;
+                    if (this.uiManager.showMessage) this.uiManager.showMessage(`Level ${this.currentLevel} Complete!`, 3000);
+                }
+            }
+
+            // Update timer
+            if (this.waveTransitionTimer > 0) {
+                this.waveTransitionTimer -= deltaTime;
+
+                // Trigger transition when timer hits 0
+                if (this.waveTransitionTimer <= 0) {
+                    this.isWaveTransitioning = false;
+
                     if (this.waveManager.hasMoreWaves()) {
                         this.waveManager.startWave();
                         this.uiManager.updateWaveDisplay(this.waveManager.getCurrentWave(), 0);
-                    }
-                    // Else if Level Complete (all waves done)
-                    else if (this.waveManager.allWavesComplete) {
+                    } else {
+                        // Level Complete
                         if (this.currentLevel < GAME_CONFIG.LEVELS.length) {
-                            console.log("Level Complete! Next Level...");
-                            this.uiManager.showMessage(`Level ${this.currentLevel} Complete!`, 3000);
-
                             this.currentLevel++;
-                            setTimeout(() => this.startLevel(this.currentLevel), 3000);
+                            this.startLevel(this.currentLevel);
                         } else {
-                            // Win condition handled by checkGameEnd
+                            // Win Game
+                            this.gameOver(true);
                         }
                     }
                 }
-                this.isWaveTransitioning = false;
-            }, 2000);
+            }
         }
 
         // Update progress UI
